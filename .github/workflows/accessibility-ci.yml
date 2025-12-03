@@ -46,14 +46,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          count=$(jq '.violations | length' a11y-report.json)
+          count=$(jq '.[0].violations | length' a11y-report.json)
           echo "Found $count accessibility violations"
           if [ "$count" -eq 0 ]; then
             echo "No accessibility issues found."
             exit 0
           fi
 
-          jq -c '.violations[]' a11y-report.json | while read -r violation; do
+          jq -c '.[0].violations[]' a11y-report.json | while read -r violation; do
             rule=$(echo "$violation" | jq -r '.id // "Unknown rule"')
             desc=$(echo "$violation" | jq -r '.description // "No description available"')
             help=$(echo "$violation" | jq -r '.helpUrl // "No help URL"')
