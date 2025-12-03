@@ -32,7 +32,7 @@ jobs:
         run: |
           echo "Running accessibility scan..."
           axe http://localhost:3000/before.html \
-            --reporter json \
+            --format json \
             --save a11y-report.json || echo "Scan issues detected"
           echo "Scan completed"
           jq 'length' a11y-report.json
