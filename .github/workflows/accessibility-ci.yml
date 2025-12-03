@@ -32,10 +32,9 @@ jobs:
         run: |
           echo "Running accessibility scan..."
           axe http://localhost:3000/before.html \
-            --exit \
-            > a11y-report.json || echo "Scan issues detected"
+            --json > a11y-report.json || echo "Scan issues detected"
           echo "Scan completed"
-          jq 'length' a11y-report.json || echo "Parsing failed"
+          jq 'length' a11y-report.json
 
       - name: Create GitHub issues for each violation
         env:
