@@ -37,15 +37,21 @@ jobs:
             --format json \
             --save a11y-report.json || true
 
-      - name: Parse violations and create issues
+      - name: Parse report and create individual issues
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          count=$(jq '.violations | length' a11y-report.json)
+          if [ "$count" -eq 0 ]; then
+            echo "No accessibility issues found."
+            exit 0
+          fi
+
           jq -c '.violations[]' a11y-report.json | while read -r violation; do
             rule=$(echo "$violation" | jq -r '.id')
             desc=$(echo "$violation" | jq -r '.description')
             help=$(echo "$violation" | jq -r '.helpUrl')
-            nodes=$(echo "$violation" | jq -r '.nodes[0].html' | sed 's/`/`/g')
+            snippet=$(echo "$violation" | jq -r '.nodes[0].html' | sed 's/`/"/g')
 
 cat <<EOF > issue.md
 ### Accessibility Issue: $rule
@@ -53,16 +59,13 @@ cat <<EOF > issue.md
 **Description:**
 $desc
 
-**Example HTML:**
+**Impacted HTML Example:**
 \`\`\`html
-$nodes
+$snippet
 \`\`\`
 
-📌 Auto-generated from axe-core scan  
-🔗 More info: $help
-
-Please apply an accessibility fix and create a Pull Request.
-
+🔗 WCAG Ref: $help  
+📌 Auto-generated — please fix and open a PR
 EOF
 
             gh issue create \
