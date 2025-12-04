@@ -1,6 +1,7 @@
 name: Automated Accessibility Scan
 
 on:
+  push:
   workflow_dispatch:
 
 permissions:
@@ -18,10 +19,9 @@ jobs:
 
       - name: Install axe-core CLI and static server
         run: |
+          npm install -g @axe-core/cli serve
           sudo apt-get update
           sudo apt-get install -y jq
-          npm install -g @axe-core/cli serve browser-driver-manager
-          npx browser-driver-manager install chrome
 
       - name: Serve site locally
         run: |
@@ -60,12 +60,12 @@ jobs:
             snippet=$(echo "$violation" | jq -r '.nodes[0].html // "No snippet available"' | sed 's/`/"/g')
 
             title="Fix: ${rule} violation"
-            body="### Accessibility Issue Detected \n\n"
+            body="### Accessibility Issue Detected 🚨\n\n"
             body+="**Rule:** \`${rule}\`\n\n"
             body+="**Description:**\n${desc}\n\n"
             body+="**Example Element:**\n\`\`\`html\n${snippet}\n\`\`\`\n\n"
-            body+="WCAG Rule: ${help}\n"
-            body+="Auto-generated — Ask Copilot to fix using:\n\`@github-copilot please fix this\`\n"
+            body+="🔗 WCAG Rule: ${help}\n"
+            body+="🤖 Auto-generated — Ask Copilot to fix using:\n\`@github-copilot please fix this\`\n"
 
             printf "%b\n" "$body" > issue.md
 
