@@ -1,0 +1,28 @@
+# AGENTS.md
+
+## Setup
+
+- This repo is a training AU site used to demonstrate automated accessibility remediation.
+- Install tools:
+  - Node 20+ if needed
+- Accessibility scan:
+  - Axe CLI report is generated at `a11y-report.json` by the `Automated Accessibility Scan` workflow.
+- Main page under test:
+  - `before.html` and `before-menu.css`
+
+## Task: Fix accessibility issues reported by the scanner
+
+When you are asked to fix accessibility issues:
+
+1. Read `a11y-report.json` to understand violations.
+2. Focus on fixing `before.html` and `before-menu.css`.
+3. For each fix, ensure:
+   - Proper semantics and ARIA.
+   - Keyboard access and focus visibility.
+   - Contrast / color usage meets WCAG 2.1 AA.
+4. Run any available checks (for example rerun axe locally, if possible).
+5. Create a new branch named `copilot/a11y-fixes-<short-id>`.
+6. Open a pull request with:
+   - Summary of issues fixed.
+   - Link back to the original issue(s).
+7. Do **not** merge the PR. Wait for a human review.

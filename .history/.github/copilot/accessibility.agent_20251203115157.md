@@ -1,5 +1,4 @@
 ---
-name: accessibility-agent
 description: "Expert assistant for web accessibility (WCAG 2.1/2.2), inclusive UX, and a11y testing"
 model: GPT-4.1
 tools:
